@@ -1,0 +1,47 @@
+{%extends 'base.html'%}
+{%block title%}All Followers{%endblock%}
+{%block styles%}
+{{super()}}
+<style>
+.card-img-top{
+    margin-top:10px;
+}
+.card-body{flex:1 1 auto;padding:1rem 1rem}
+li{
+    list-style-type: None;
+}
+.followers{
+    font-family:;
+}
+.now{
+    border-bottom:2px solid gray;
+    margin:10px;
+}
+</style>
+{%endblock%}
+{%block content%}
+{%block head_content%}
+<div class='page-header'>
+    <h3>All People followed by {{user.username}}</h3>
+</div>
+{%endblock%}
+<ul class='card-body'>
+{%for follow in follows%}
+<li class='now'>
+<div class='containers'>
+<div class='card-img-top'>
+    <a href="{{url_for('.user',username=follow.get('users').username)}}">
+    <img class='img-rounded' src='{{follow.get("users").gravatar(size=40)}}' align='left'>
+    </a>
+</div>
+<div>
+<p class='followers'>{{follow.get('users').username}}</p>
+</div>
+<div>
+<p class='time' align='right'>| started following {{moment(follow.get('timestamp')).fromNow(refresh=True)}}</p>
+</div>
+</div>
+</li>
+{%endfor%}
+</ul>
+{%endblock%}

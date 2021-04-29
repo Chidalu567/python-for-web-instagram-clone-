@@ -1,0 +1,39 @@
+{%extends 'base.html'%}
+{%import 'bootstrap/wtf.html'as wtf%}
+{%import '_macros.html' as macros%}
+{%block title%}Home Page{%endblock%}
+{%block scripts%}
+{{super()}}
+{{pagedown.include_pagedown()}}
+{%endblock%}
+{%block content%}
+<div>
+    {%if current_user.can(Permission.Write)%}
+    {{wtf.quick_form(form)}}
+    {%endif%}
+</div>
+{%block styles%}
+{{super()}}
+<style>
+.card-title{
+    margin-bottom:.5rem;
+}
+.card-body{flex:1 1 auto;padding:1rem 1rem}
+.post{
+ border-top:1px solid gray;
+}
+.card-text{
+    margin-bottom:9px;
+    font-family:sans-serif;
+    padding-right:1px;
+}
+.img-rounded{
+    margin-top:9px;
+}
+</style>
+{%endblock%}
+{%include '_posts.html'%}
+<div class='pagination'>
+    {{macros.pagination_widget(pagination,'.index')}}
+    </div>
+{%endblock%}

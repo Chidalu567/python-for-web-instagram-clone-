@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<!-- saved from url=(0064)https://flask.palletsprojects.com/en/1.1.x/patterns/fileuploads/ -->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Uploading Files — Flask Documentation (1.1.x)</title>
+    <link rel="stylesheet" href="./For uploads_files/flask.css" type="text/css">
+    <link rel="stylesheet" href="./For uploads_files/pygments.css" type="text/css">
+    <link rel="stylesheet" type="text/css" href="./For uploads_files/badge_only.css">
+    <script type="text/javascript" async="" src="./For uploads_files/analytics.js.download"></script><script type="text/javascript" async="" src="./For uploads_files/js"></script><script type="text/javascript" async="" src="./For uploads_files/analytics.js.download"></script><script type="text/javascript" id="documentation_options" data-url_root="../../" src="./For uploads_files/documentation_options.js.download"></script>
+    <script type="text/javascript" src="./For uploads_files/jquery.js.download"></script>
+    <script type="text/javascript" src="./For uploads_files/underscore.js.download"></script>
+    <script type="text/javascript" src="./For uploads_files/doctools.js.download"></script>
+    <script type="text/javascript" src="./For uploads_files/language_data.js.download"></script>
+    <script async="async" type="text/javascript" src="./For uploads_files/readthedocs-doc-embed.js.download"></script>
+    <link rel="shortcut icon" href="./For uploads_files/flask-icon.png">
+    <link rel="index" title="Index" href="https://flask.palletsprojects.com/en/1.1.x/genindex/">
+    <link rel="search" title="Search" href="https://flask.palletsprojects.com/en/1.1.x/search/">
+    <link rel="next" title="Caching" href="https://flask.palletsprojects.com/en/1.1.x/patterns/caching/">
+    <link rel="prev" title="SQLAlchemy in Flask" href="https://flask.palletsprojects.com/en/1.1.x/patterns/sqlalchemy/">
+    <link rel="canonical" href="https://flask.palletsprojects.com/en/1.1.x/patterns/fileuploads/">
+  <script>DOCUMENTATION_OPTIONS.URL_ROOT = '../../';</script>
+   
+  
+<!-- RTD Extra Head -->
+
+<!-- 
+Always link to the latest version, as canonical.
+http://docs.readthedocs.org/en/latest/canonical.html
+-->
+<link rel="canonical" href="https://flask.palletsprojects.com/en/1.1.x/patterns/fileuploads.html">
+
+<link rel="stylesheet" href="./For uploads_files/readthedocs-doc-embed.css" type="text/css">
+
+<script type="application/json" id="READTHEDOCS_DATA">{"ad_free": false, "api_host": "https://readthedocs.org", "build_date": "2021-01-04T01:53:31Z", "builder": "sphinx", "canonical_url": "https://flask.palletsprojects.com/en/1.1.x/", "commit": "444550ab", "docroot": "/docs/", "features": {"docsearch_disabled": true}, "global_analytics_code": "UA-17997319-1", "language": "en", "page": "patterns/fileuploads", "programming_language": "py", "project": "flask", "proxied_api_host": "/_", "source_suffix": ".rst", "subprojects": {}, "theme": "flask", "user_analytics_code": "UA-162825511-1", "version": "1.1.x"}</script>
+
+<!--
+Using this variable directly instead of using `JSON.parse` is deprecated.
+The READTHEDOCS_DATA global variable will be removed in the future.
+-->
+<script type="text/javascript">
+READTHEDOCS_DATA = JSON.parse(document.getElementById('READTHEDOCS_DATA').innerHTML);
+</script>
+
+<script type="text/javascript" src="./For uploads_files/readthedocs-analytics.js.download" async="async"></script>
+
+<!-- end RTD <extrahead> -->
+<script src="./For uploads_files/ethicalads.min.js.download" type="text/javascript" async="" id="ethicaladsjs"></script><style>[data-ea-publisher].loaded,[data-ea-type].loaded{font-size:14px;font-family:-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;font-weight:normal;font-style:normal;leter-spacing:0px;vertical-align:baseline;line-height:1.3em}[data-ea-publisher].loaded a,[data-ea-type].loaded a{text-decoration:none}[data-ea-publisher].loaded .ea-pixel,[data-ea-type].loaded .ea-pixel{display:none}[data-ea-publisher].loaded .ea-content,[data-ea-type].loaded .ea-content{margin:1em 1em 0.5em 1em;padding:1em;background:rgba(0,0,0,0.03);color:#505050}[data-ea-publisher].loaded .ea-content a:link,[data-ea-type].loaded .ea-content a:link{color:#505050}[data-ea-publisher].loaded .ea-content a:visited,[data-ea-type].loaded .ea-content a:visited{color:#505050}[data-ea-publisher].loaded .ea-content a:hover,[data-ea-type].loaded .ea-content a:hover{color:#373737}[data-ea-publisher].loaded .ea-content a:active,[data-ea-type].loaded .ea-content a:active{color:#373737}[data-ea-publisher].loaded .ea-content a strong,[data-ea-publisher].loaded .ea-content a b,[data-ea-type].loaded .ea-content a strong,[data-ea-type].loaded .ea-content a b{color:#088cdb}[data-ea-publisher].loaded .ea-callout a:link,[data-ea-type].loaded .ea-callout a:link{color:#6a6a6a}[data-ea-publisher].loaded .ea-callout a:visited,[data-ea-type].loaded .ea-callout a:visited{color:#6a6a6a}[data-ea-publisher].loaded .ea-callout a:hover,[data-ea-type].loaded .ea-callout a:hover{color:#505050}[data-ea-publisher].loaded .ea-callout a:active,[data-ea-type].loaded .ea-callout a:active{color:#505050}[data-ea-publisher].loaded .ea-callout a strong,[data-ea-publisher].loaded .ea-callout a b,[data-ea-type].loaded .ea-callout a strong,[data-ea-type].loaded .ea-callout a b{color:#088cdb}[data-ea-publisher].loaded .ea-callout a,[data-ea-type].loaded .ea-callout a{font-size:0.8em}[data-ea-publisher].loaded.dark .ea-content,[data-ea-type].loaded.dark .ea-content{background:rgba(255,255,255,0.05);color:#dcdcdc}[data-ea-publisher].loaded.dark .ea-content a:link,[data-ea-type].loaded.dark .ea-content a:link{color:#dcdcdc}[data-ea-publisher].loaded.dark .ea-content a:visited,[data-ea-type].loaded.dark .ea-content a:visited{color:#dcdcdc}[data-ea-publisher].loaded.dark .ea-content a:hover,[data-ea-type].loaded.dark .ea-content a:hover{color:#f6f6f6}[data-ea-publisher].loaded.dark .ea-content a:active,[data-ea-type].loaded.dark .ea-content a:active{color:#f6f6f6}[data-ea-publisher].loaded.dark .ea-content a strong,[data-ea-publisher].loaded.dark .ea-content a b,[data-ea-type].loaded.dark .ea-content a strong,[data-ea-type].loaded.dark .ea-content a b{color:#50baf9}[data-ea-publisher].loaded.dark .ea-callout a:link,[data-ea-type].loaded.dark .ea-callout a:link{color:#c3c3c3}[data-ea-publisher].loaded.dark .ea-callout a:visited,[data-ea-type].loaded.dark .ea-callout a:visited{color:#c3c3c3}[data-ea-publisher].loaded.dark .ea-callout a:hover,[data-ea-type].loaded.dark .ea-callout a:hover{color:#dcdcdc}[data-ea-publisher].loaded.dark .ea-callout a:active,[data-ea-type].loaded.dark .ea-callout a:active{color:#dcdcdc}[data-ea-publisher].loaded.dark .ea-callout a strong,[data-ea-publisher].loaded.dark .ea-callout a b,[data-ea-type].loaded.dark .ea-callout a strong,[data-ea-type].loaded.dark .ea-callout a b{color:#50baf9}[data-ea-publisher].loaded .ea-content,[data-ea-type].loaded .ea-content{border:0px;border-radius:3px;box-shadow:0px 2px 3px rgba(0,0,0,0.15)}[data-ea-publisher].loaded.raised .ea-content,[data-ea-type].loaded.raised .ea-content{border:0px;border-radius:3px;box-shadow:0px 2px 3px rgba(0,0,0,0.15)}[data-ea-publisher].loaded.bordered .ea-content,[data-ea-type].loaded.bordered .ea-content{border:1px solid rgba(0,0,0,0.04);border-radius:3px;box-shadow:none}[data-ea-publisher].loaded.bordered.dark .ea-content,[data-ea-type].loaded.bordered.dark .ea-content{border:1px solid rgba(255,255,255,0.07)}[data-ea-publisher].loaded.flat .ea-content,[data-ea-type].loaded.flat .ea-content{border:0px;border-radius:3px;box-shadow:none}[data-ea-type="image"].loaded,[data-ea-publisher]:not([data-ea-type]).loaded,.ea-type-image{display:inline-block}[data-ea-type="image"].loaded .ea-content,[data-ea-publisher]:not([data-ea-type]).loaded .ea-content,.ea-type-image .ea-content{max-width:180px;overflow:auto;text-align:center}[data-ea-type="image"].loaded .ea-content>a>img,[data-ea-publisher]:not([data-ea-type]).loaded .ea-content>a>img,.ea-type-image .ea-content>a>img{width:120px;height:90px;display:inline-block}[data-ea-type="image"].loaded .ea-content>.ea-text,[data-ea-publisher]:not([data-ea-type]).loaded .ea-content>.ea-text,.ea-type-image .ea-content>.ea-text{margin-top:1em;font-size:1em;text-align:center}[data-ea-type="image"].loaded .ea-callout,[data-ea-publisher]:not([data-ea-type]).loaded .ea-callout,.ea-type-image .ea-callout{max-width:180px;margin:0em 1em 1em 1em;padding-left:1em;padding-right:1em;font-style:italic;text-align:right}[data-ea-type="image"].loaded.horizontal .ea-content,[data-ea-publisher]:not([data-ea-type]).loaded.horizontal .ea-content,.ea-type-image.horizontal .ea-content{max-width:320px}[data-ea-type="image"].loaded.horizontal .ea-content>a>img,[data-ea-publisher]:not([data-ea-type]).loaded.horizontal .ea-content>a>img,.ea-type-image.horizontal .ea-content>a>img{float:left;margin-right:1em}[data-ea-type="image"].loaded.horizontal .ea-content .ea-text,[data-ea-publisher]:not([data-ea-type]).loaded.horizontal .ea-content .ea-text,.ea-type-image.horizontal .ea-content .ea-text{margin-top:0em;text-align:left;overflow:auto}[data-ea-type="image"].loaded.horizontal .ea-callout,[data-ea-publisher]:not([data-ea-type]).loaded.horizontal .ea-callout,.ea-type-image.horizontal .ea-callout{max-width:320px;text-align:right}[data-ea-type="text"].loaded,.ea-type-text{font-size:14px}[data-ea-type="text"].loaded .ea-content,.ea-type-text .ea-content{text-align:left}[data-ea-type="text"].loaded .ea-callout,.ea-type-text .ea-callout{margin:0.5em 1em 1em 1em;padding-left:1em;padding-right:1em;text-align:right;font-style:italic}
+</style><script src="./For uploads_files/js(1)" type="text/javascript" async=""></script><script src="./For uploads_files/saved_resource" type="text/javascript" async=""></script></head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="https://flask.palletsprojects.com/en/1.1.x/genindex/" title="General Index" accesskey="I">index</a></li>
+        <li class="right">
+          <a href="https://flask.palletsprojects.com/en/1.1.x/py-modindex/" title="Python Module Index">modules</a> |</li>
+        <li class="right">
+          <a href="https://flask.palletsprojects.com/en/1.1.x/patterns/caching/" title="Caching" accesskey="N">next</a> |</li>
+        <li class="right">
+          <a href="https://flask.palletsprojects.com/en/1.1.x/patterns/sqlalchemy/" title="SQLAlchemy in Flask" accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="https://flask.palletsprojects.com/en/1.1.x/">Flask Documentation (1.1.x)</a> »</li>
+          <li class="nav-item nav-item-1"><a href="https://flask.palletsprojects.com/en/1.1.x/patterns/" accesskey="U">Patterns for Flask</a> »</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="uploading-files">
+<span id="id1"></span><h1>Uploading Files<a class="headerlink" href="https://flask.palletsprojects.com/en/1.1.x/patterns/fileuploads/#uploading-files" title="Permalink to this headline">¶</a></h1>
+<p>Ah yes, the good old problem of file uploads.  The basic idea of file
+uploads is actually quite simple.  It basically works like this:</p>
+<ol class="arabic simple">
+<li><p>A <code class="docutils literal notranslate"><span class="pre">&lt;form&gt;</span></code> tag is marked with <code class="docutils literal notranslate"><span class="pre">enctype=multipart/form-data</span></code>
+and an <code class="docutils literal notranslate"><span class="pre">&lt;input</span> <span class="pre">type=file&gt;</span></code> is placed in that form.</p></li>
+<li><p>The application accesses the file from the <code class="xref py py-attr docutils literal notranslate"><span class="pre">files</span></code>
+dictionary on the request object.</p></li>
+<li><p>use the <a class="reference external" href="https://werkzeug.palletsprojects.com/en/1.0.x/datastructures/#werkzeug.datastructures.FileStorage.save" title="(in Werkzeug v1.0.x)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">save()</span></code></a> method of the file to save
+the file permanently somewhere on the filesystem.</p></li>
+</ol>
+<div class="section" id="a-gentle-introduction">
+<h2>A Gentle Introduction<a class="headerlink" href="https://flask.palletsprojects.com/en/1.1.x/patterns/fileuploads/#a-gentle-introduction" title="Permalink to this headline">¶</a></h2>
+<p>Let’s start with a very basic application that uploads a file to a
+specific upload folder and displays a file to the user.  Let’s look at the
+bootstrapping code for our application:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">flash</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">url_for</span>
+<span class="kn">from</span> <span class="nn">werkzeug.utils</span> <span class="kn">import</span> <span class="n">secure_filename</span>
+
+<span class="n">UPLOAD_FOLDER</span> <span class="o">=</span> <span class="s1">'/path/to/the/uploads'</span>
+<span class="n">ALLOWED_EXTENSIONS</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'txt'</span><span class="p">,</span> <span class="s1">'pdf'</span><span class="p">,</span> <span class="s1">'png'</span><span class="p">,</span> <span class="s1">'jpg'</span><span class="p">,</span> <span class="s1">'jpeg'</span><span class="p">,</span> <span class="s1">'gif'</span><span class="p">}</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'UPLOAD_FOLDER'</span><span class="p">]</span> <span class="o">=</span> <span class="n">UPLOAD_FOLDER</span>
+</pre></div>
+</div>
+<p>So first we need a couple of imports.  Most should be straightforward, the
+<code class="xref py py-func docutils literal notranslate"><span class="pre">werkzeug.secure_filename()</span></code> is explained a little bit later.  The
+<code class="docutils literal notranslate"><span class="pre">UPLOAD_FOLDER</span></code> is where we will store the uploaded files and the
+<code class="docutils literal notranslate"><span class="pre">ALLOWED_EXTENSIONS</span></code> is the set of allowed file extensions.</p>
+<p>Why do we limit the extensions that are allowed?  You probably don’t want
+your users to be able to upload everything there if the server is directly
+sending out the data to the client.  That way you can make sure that users
+are not able to upload HTML files that would cause XSS problems (see
+<a class="reference internal" href="https://flask.palletsprojects.com/en/1.1.x/security/#xss"><span class="std std-ref">Cross-Site Scripting (XSS)</span></a>).  Also make sure to disallow <code class="docutils literal notranslate"><span class="pre">.php</span></code> files if the server
+executes them, but who has PHP installed on their server, right?  :)</p>
+<p>Next the functions that check if an extension is valid and that uploads
+the file and redirects the user to the URL for the uploaded file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">allowed_file</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s1">'.'</span> <span class="ow">in</span> <span class="n">filename</span> <span class="ow">and</span> \
+           <span class="n">filename</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">'.'</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">ALLOWED_EXTENSIONS</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">'/'</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">'GET'</span><span class="p">,</span> <span class="s1">'POST'</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">upload_file</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">'POST'</span><span class="p">:</span>
+        <span class="c1"># check if the post request has the file part</span>
+        <span class="k">if</span> <span class="s1">'file'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">files</span><span class="p">:</span>
+            <span class="n">flash</span><span class="p">(</span><span class="s1">'No file part'</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">file</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="s1">'file'</span><span class="p">]</span>
+        <span class="c1"># if user does not select file, browser also</span>
+        <span class="c1"># submit an empty part without filename</span>
+        <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">filename</span> <span class="o">==</span> <span class="s1">''</span><span class="p">:</span>
+            <span class="n">flash</span><span class="p">(</span><span class="s1">'No selected file'</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">file</span> <span class="ow">and</span> <span class="n">allowed_file</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">filename</span><span class="p">):</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">secure_filename</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'UPLOAD_FOLDER'</span><span class="p">],</span> <span class="n">filename</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">'uploaded_file'</span><span class="p">,</span>
+                                    <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">))</span>
+    <span class="k">return</span> <span class="s1">'''</span>
+<span class="s1">    &lt;!doctype html&gt;</span>
+<span class="s1">    &lt;title&gt;Upload new File&lt;/title&gt;</span>
+<span class="s1">    &lt;h1&gt;Upload new File&lt;/h1&gt;</span>
+<span class="s1">    &lt;form method=post enctype=multipart/form-data&gt;</span>
+<span class="s1">      &lt;input type=file name=file&gt;</span>
+<span class="s1">      &lt;input type=submit value=Upload&gt;</span>
+<span class="s1">    &lt;/form&gt;</span>
+<span class="s1">    '''</span>
+</pre></div>
+</div>
+<p>So what does that <a class="reference external" href="https://werkzeug.palletsprojects.com/en/1.0.x/utils/#werkzeug.utils.secure_filename" title="(in Werkzeug v1.0.x)"><code class="xref py py-func docutils literal notranslate"><span class="pre">secure_filename()</span></code></a> function actually do?
+Now the problem is that there is that principle called “never trust user
+input”.  This is also true for the filename of an uploaded file.  All
+submitted form data can be forged, and filenames can be dangerous.  For
+the moment just remember: always use that function to secure a filename
+before storing it directly on the filesystem.</p>
+<div class="admonition-information-for-the-pros admonition">
+<p class="admonition-title">Information for the Pros</p>
+<p>So you’re interested in what that <a class="reference external" href="https://werkzeug.palletsprojects.com/en/1.0.x/utils/#werkzeug.utils.secure_filename" title="(in Werkzeug v1.0.x)"><code class="xref py py-func docutils literal notranslate"><span class="pre">secure_filename()</span></code></a>
+function does and what the problem is if you’re not using it?  So just
+imagine someone would send the following information as <cite>filename</cite> to
+your application:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="s2">"../../../../home/username/.bashrc"</span>
+</pre></div>
+</div>
+<p>Assuming the number of <code class="docutils literal notranslate"><span class="pre">../</span></code> is correct and you would join this with
+the <code class="docutils literal notranslate"><span class="pre">UPLOAD_FOLDER</span></code> the user might have the ability to modify a file on
+the server’s filesystem he or she should not modify.  This does require some
+knowledge about how the application looks like, but trust me, hackers
+are patient :)</p>
+<p>Now let’s look how that function works:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">secure_filename</span><span class="p">(</span><span class="s1">'../../../../home/username/.bashrc'</span><span class="p">)</span>
+<span class="go">'home_username_.bashrc'</span>
+</pre></div>
+</div>
+</div>
+<p>Now one last thing is missing: the serving of the uploaded files. In the
+<code class="xref py py-func docutils literal notranslate"><span class="pre">upload_file()</span></code> we redirect the user to
+<code class="docutils literal notranslate"><span class="pre">url_for('uploaded_file',</span> <span class="pre">filename=filename)</span></code>, that is, <code class="docutils literal notranslate"><span class="pre">/uploads/filename</span></code>.
+So we write the <code class="xref py py-func docutils literal notranslate"><span class="pre">uploaded_file()</span></code> function to return the file of that name. As
+of Flask 0.5 we can use a function that does that for us:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">send_from_directory</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">'/uploads/&lt;filename&gt;'</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">uploaded_file</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">send_from_directory</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'UPLOAD_FOLDER'</span><span class="p">],</span>
+                               <span class="n">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Alternatively you can register <cite>uploaded_file</cite> as <cite>build_only</cite> rule and
+use the <code class="xref py py-class docutils literal notranslate"><span class="pre">SharedDataMiddleware</span></code>.  This also works with
+older versions of Flask:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">werkzeug.middleware.shared_data</span> <span class="kn">import</span> <span class="n">SharedDataMiddleware</span>
+<span class="n">app</span><span class="o">.</span><span class="n">add_url_rule</span><span class="p">(</span><span class="s1">'/uploads/&lt;filename&gt;'</span><span class="p">,</span> <span class="s1">'uploaded_file'</span><span class="p">,</span>
+                 <span class="n">build_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">app</span><span class="o">.</span><span class="n">wsgi_app</span> <span class="o">=</span> <span class="n">SharedDataMiddleware</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">wsgi_app</span><span class="p">,</span> <span class="p">{</span>
+    <span class="s1">'/uploads'</span><span class="p">:</span>  <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'UPLOAD_FOLDER'</span><span class="p">]</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+<p>If you now run the application everything should work as expected.</p>
+</div>
+<div class="section" id="improving-uploads">
+<h2>Improving Uploads<a class="headerlink" href="https://flask.palletsprojects.com/en/1.1.x/patterns/fileuploads/#improving-uploads" title="Permalink to this headline">¶</a></h2>
+<details class="changelog">
+<summary>Changelog</summary><div class="versionadded">
+<p><span class="versionmodified added">New in version 0.6.</span></p>
+</div>
+</details><p>So how exactly does Flask handle uploads?  Well it will store them in the
+webserver’s memory if the files are reasonable small otherwise in a
+temporary location (as returned by <a class="reference external" href="https://docs.python.org/3/library/tempfile.html#tempfile.gettempdir" title="(in Python v3.9)"><code class="xref py py-func docutils literal notranslate"><span class="pre">tempfile.gettempdir()</span></code></a>).  But how
+do you specify the maximum file size after which an upload is aborted?  By
+default Flask will happily accept file uploads to an unlimited amount of
+memory, but you can limit that by setting the <code class="docutils literal notranslate"><span class="pre">MAX_CONTENT_LENGTH</span></code>
+config key:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">Request</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'MAX_CONTENT_LENGTH'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">16</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span>
+</pre></div>
+</div>
+<p>The code above will limit the maximum allowed payload to 16 megabytes.
+If a larger file is transmitted, Flask will raise a
+<a class="reference external" href="https://werkzeug.palletsprojects.com/en/1.0.x/exceptions/#werkzeug.exceptions.RequestEntityTooLarge" title="(in Werkzeug v1.0.x)"><code class="xref py py-exc docutils literal notranslate"><span class="pre">RequestEntityTooLarge</span></code></a> exception.</p>
+<div class="admonition-connection-reset-issue admonition">
+<p class="admonition-title">Connection Reset Issue</p>
+<p>When using the local development server, you may get a connection
+reset error instead of a 413 response. You will get the correct
+status response when running the app with a production WSGI server.</p>
+</div>
+<p>This feature was added in Flask 0.6 but can be achieved in older versions
+as well by subclassing the request object.  For more information on that
+consult the Werkzeug documentation on file handling.</p>
+</div>
+<div class="section" id="upload-progress-bars">
+<h2>Upload Progress Bars<a class="headerlink" href="https://flask.palletsprojects.com/en/1.1.x/patterns/fileuploads/#upload-progress-bars" title="Permalink to this headline">¶</a></h2>
+<p>A while ago many developers had the idea to read the incoming file in
+small chunks and store the upload progress in the database to be able to
+poll the progress with JavaScript from the client.  Long story short: the
+client asks the server every 5 seconds how much it has transmitted
+already.  Do you realize the irony?  The client is asking for something it
+should already know.</p>
+</div>
+<div class="section" id="an-easier-solution">
+<h2>An Easier Solution<a class="headerlink" href="https://flask.palletsprojects.com/en/1.1.x/patterns/fileuploads/#an-easier-solution" title="Permalink to this headline">¶</a></h2>
+<p>Now there are better solutions that work faster and are more reliable. There
+are JavaScript libraries like <a class="reference external" href="https://jquery.com/">jQuery</a> that have form plugins to ease the
+construction of progress bar.</p>
+<p>Because the common pattern for file uploads exists almost unchanged in all
+applications dealing with uploads, there is also a Flask extension called
+<a class="reference external" href="https://pythonhosted.org/Flask-Uploads/">Flask-Uploads</a> that implements a full fledged upload mechanism with white and
+blacklisting of extensions and more.</p>
+</div>
+</div>
+
+
+          <div id="rtd-sidebar" data-ea-publisher="readthedocs-pallets" data-ea-type="readthedocs-sidebar" data-ea-manual="true" class="ethical-alabaster loaded" data-ea-keywords="flask|jinja|python|readthedocs-project-96|readthedocs-project-flask|web-framework|werkzeug|wsgi" data-ea-campaign-types="community|house|paid"><div class="ethical-sidebar"><div class="ethical-content"><a href="https://server.ethicalads.io/proxy/click/194/b229e460-7050-42da-bf3b-fcb4bcf29422/" rel="nofollow" target="_blank" class="ethical-image-link"><img src="./For uploads_files/english-house_RILBxkP.png"></a><div class="ethical-text"><a href="https://server.ethicalads.io/proxy/click/194/b229e460-7050-42da-bf3b-fcb4bcf29422/" rel="nofollow" target="_blank"><b>Reach over 7 million devs</b> each month when you advertise with Read the Docs</a>.</div></div><div class="ethical-callout"><small><em><a href="https://readthedocs.org/sustainability/advertising/">Sponsored</a><span> · </span><a href="https://docs.readthedocs.io/en/latest/ethical-advertising.html">Ads served ethically</a></em></small></div></div></div></div>
+        </div>
+      </div>
+  <span id="sidebar-top"></span>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  
+    
+            <p class="logo"><a href="https://flask.palletsprojects.com/en/1.1.x/">
+              <img class="logo" src="./For uploads_files/flask-icon.png" alt="Logo">
+            </a></p>
+  
+
+  <h3>Contents</h3>
+  <ul>
+<li><a class="reference internal" href="https://flask.palletsprojects.com/en/1.1.x/patterns/fileuploads/#">Uploading Files</a><ul>
+<li><a class="reference internal" href="https://flask.palletsprojects.com/en/1.1.x/patterns/fileuploads/#a-gentle-introduction">A Gentle Introduction</a></li>
+<li><a class="reference internal" href="https://flask.palletsprojects.com/en/1.1.x/patterns/fileuploads/#improving-uploads">Improving Uploads</a></li>
+<li><a class="reference internal" href="https://flask.palletsprojects.com/en/1.1.x/patterns/fileuploads/#upload-progress-bars">Upload Progress Bars</a></li>
+<li><a class="reference internal" href="https://flask.palletsprojects.com/en/1.1.x/patterns/fileuploads/#an-easier-solution">An Easier Solution</a></li>
+</ul>
+</li>
+</ul>
+<h3>Navigation</h3>
+<ul>
+  <li><a href="https://flask.palletsprojects.com/en/1.1.x/">Overview</a>
+    <ul>
+      <li><a href="https://flask.palletsprojects.com/en/1.1.x/patterns/">Patterns for Flask</a>
+        <ul>
+          <li>Previous: <a href="https://flask.palletsprojects.com/en/1.1.x/patterns/sqlalchemy/" title="previous chapter">SQLAlchemy in Flask</a>
+          </li><li>Next: <a href="https://flask.palletsprojects.com/en/1.1.x/patterns/caching/" title="next chapter">Caching</a></li></ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+<div id="searchbox" style="" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="https://flask.palletsprojects.com/en/1.1.x/search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel">
+      <input type="submit" value="Go">
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  
+    <div class="footer" role="contentinfo">
+        © Copyright 2010 Pallets.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
+    </div>
+    <script>
+      if (typeof READTHEDOCS_DATA !== 'undefined') {
+        if (!READTHEDOCS_DATA.features) {
+          READTHEDOCS_DATA.features = {};
+        }
+        READTHEDOCS_DATA.features.docsearch_disabled = true;
+      }
+    </script>
+  <script type="text/javascript" src="./For uploads_files/version_warning_offset.js.download"></script>
+
+  
+<!-- Inserted RTD Footer -->
+
+<div class="injected">
+
+  
+  <div class="rst-versions rst-badge" data-toggle="rst-versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book">&nbsp;</span>
+      v: 1.1.x
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      
+
+      
+      
+      
+      <dl>
+        <dt>Versions</dt>
+        
+        
+        <dd><a href="https://flask.palletsprojects.com/en/master/patterns/fileuploads/">master</a></dd>
+        
+        
+         <strong> 
+        <dd><a href="https://flask.palletsprojects.com/en/1.1.x/patterns/fileuploads/">1.1.x</a></dd>
+         </strong> 
+        
+        
+        <dd><a href="https://flask.palletsprojects.com/en/1.0.x/patterns/fileuploads/">1.0.x</a></dd>
+        
+        
+        
+        <dd><a href="https://flask.palletsprojects.com/en/0.12.x/patterns/fileuploads/">0.12.x</a></dd>
+        
+        
+      </dl>
+      
+      
+
+      
+      
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="https://flask.palletsprojects.com/_/downloads/en/1.1.x/pdf/">PDF</a></dd>
+        
+        <dd><a href="https://flask.palletsprojects.com/_/downloads/en/1.1.x/htmlzip/">HTML</a></dd>
+        
+        <dd><a href="https://flask.palletsprojects.com/_/downloads/en/1.1.x/epub/">Epub</a></dd>
+        
+      </dl>
+      
+      
+
+      
+      <dl>
+        
+        <!-- These are kept as relative links for internal installs that are http -->
+        <dt>On Read the Docs</dt>
+        <dd>
+          <a href="https://readthedocs.org/projects/flask/">Project Home</a>
+        </dd>
+        <dd>
+          <a href="https://readthedocs.org/projects/flask/builds/">Builds</a>
+        </dd>
+        <dd>
+          <a href="https://readthedocs.org/projects/flask/downloads/">Downloads</a>
+        </dd>
+      </dl>
+      
+
+      
+
+      
+      <dl>
+        <dt>On GitHub</dt>
+        <dd>
+          <a href="https://github.com/pallets/flask/blob/1.1.x/docs/patterns/fileuploads.rst">View</a>
+        </dd>
+        
+        <dd>
+          <a href="https://github.com/pallets/flask/edit/1.1.x/docs/patterns/fileuploads.rst">Edit</a>
+        </dd>
+        
+      </dl>
+      
+      
+
+      
+      <dl>
+        <dt>Search</dt>
+        <dd>
+          <div style="padding: 6px;">
+            
+            <form id="flyout-search-form" class="wy-form" target="_blank" action="https://readthedocs.org/projects/flask/search/" method="get">
+              <input type="text" name="q" placeholder="Search docs">
+              </form>
+          </div>
+        </dd>
+      </dl>
+      
+
+      
+      
+
+      <hr>
+      
+        <small>
+          <span>Hosted by <a href="https://readthedocs.org/">Read the Docs</a></span>
+          <span> · </span>
+          <a href="https://docs.readthedocs.io/page/privacy-policy.html">Privacy Policy</a>
+        </small>
+      
+
+      
+    </div>
+  </div>
+  
+
+</div>
+</body></html>

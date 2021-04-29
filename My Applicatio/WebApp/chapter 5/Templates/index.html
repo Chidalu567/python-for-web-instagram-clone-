@@ -1,0 +1,18 @@
+{%extends 'base.html'%}
+
+{%block title%}Flasky{%endblock%}
+
+
+
+{%block content%}
+    {%block head_content%}
+        <div class='page-header'>
+            {%if name%}<h1>Hello,{{name}}</h1>{%else%}<h1>Hello,Stranger</h1>{%endif%}
+        </div>
+    {%endblock%}
+    <form method='POST'>
+    {{form.hidden_tag()}}
+    {{form.name.label}} {{form.name}}
+    {{form.submit}}
+</form>
+{%endblock%}

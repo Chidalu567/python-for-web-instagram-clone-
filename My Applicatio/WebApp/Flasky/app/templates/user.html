@@ -1,0 +1,62 @@
+{%extends 'base.html'%}
+{%block title%}Flasky {{user.username}}{%endblock%}
+
+{%block styles%}
+{{super()}}
+<style>
+.card-title{
+    margin-bottom:.5rem;
+}
+.card-body{flex:1 1 auto;padding:1rem 1rem}
+.post{
+ border-top:2px outset gray;
+ border-bottom:1px solid gray;
+}
+.card-text{
+    font-family:sans-serif;
+    padding-right:20px;
+
+}
+.img-rounded{
+    margin-top:9px;
+}
+.page-header{
+    margin-left:100px;
+}
+
+</style>
+{%endblock%}
+{%block content%}
+{%block head_content%}
+<div class='page-header'>
+    <img class='img-rounded' src='{{user.gravatar(size=256)}}'>
+    <div class='profile-header'>
+    </div>
+    <h1>{{user.username}}</h1>
+    {%if user.name or user.location%}
+        <p>
+            My Real Name is {%if user.name%}{{user.name}}{%endif%} from
+            {%if user.location%}<a href='http://map.google.com/?q={{user.location}}'>{{user.location}}</a>{%endif%}
+        </p>
+        {%endif%}
+        {%if current_user.is_authenticated%}
+            <p><a href='mailto:{{user.email}}'>{{user.email}}</a></p>
+        {%endif%}
+        {%if user.about_me%}<p>{{user.about_me}}</p>{%endif%}
+        {%if user==current_user%}
+        <a class='btn btn-primary' href="{{url_for('.edit_profile')}}">
+            Edit Profile
+        </a>
+        {%endif%}
+        {%if user.is_administrator()%}
+        <a class='btn btn-danger' href="{{url_for('.edit_profile_admin',id=user.id)}}">Edit Profile[Admin]</a>
+        {%endif%}
+        <p>
+            Member since {{moment(user.member_since).format('L')}}.
+            Last seen {{moment(user.last_seen).fromNow()}}.
+        </p>
+    </div>
+{%endblock%}
+<h3>All User posts</h3>
+{%include '_posts.html'%}
+{%endblock%}

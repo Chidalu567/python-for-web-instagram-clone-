@@ -1,0 +1,13 @@
+{%extends 'base.html'%}
+{%import 'bootstrap/wtf.html' as wtf%}
+{%block title%}Flasky {{form.name.data}} edit profile{%endblock%}
+
+{%block head_content%}
+<div class='page-header'>
+    Edit Your Profile
+</div>
+{%endblock%}
+
+{%block content%}
+{{wtf.quick_form(form)}}
+{%endblock%}

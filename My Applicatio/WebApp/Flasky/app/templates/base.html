@@ -1,0 +1,62 @@
+<doctype html>
+<html>
+<head>
+    {%block head%}
+    <title>{%block title%}{%endblock%}</title>
+    {%block metas%}{%endblock%}
+    {%block styles%}
+        <link rel='stylesheet' href="{{url_for('static',filename='css/bootstrap.css',_external=True)}}"/>
+    {%endblock%}
+    {%endblock%}
+</head>
+<body>
+    {%block scripts%}
+    <script type='text/javascript' src="{{url_for('static',filename='js/moment.js',_external=True)}}"></script>
+    {{moment.include_jquery()}}
+    {{moment.include_moment()}}
+    <script src="{{url_for('static',filename='js/popper.min.js',_external=True)}}"></script>
+    {%endblock%}
+{%block navbar%}
+    <div class='navbar navbar-inverse' role='navigation'>
+        <div class='container-fluid'>
+            <div class='navbar-header'>
+                <button class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                    <span class='sr-only'>Toogle Navigation</span>
+                    <span class='icon-bar'></span>
+                    <span class='icon-bar'></span>
+                    <span class='icon-bar'></span>
+                </button>
+            <a class='navbar-brand' href="#">Flasky</a>
+            </div>
+            <div class='navbar-collapse collapse'>
+            <ul class='nav navbar-nav'>
+                <li><a href='/'>Home</a></li>
+                <li><a href='/user'>About</a></li>
+                {%if current_user.is_authenticated%}
+                <li><a href="{{url_for('main.user',username=current_user.username)}}">Profile</a></li>
+                {%endif%}
+            </ul>
+            <ul class='nav navbar-nav navbar-right'>
+                {%if current_user.is_authenticated%}
+                <li><a href="{{url_for('auth.logout')}}">Logout</a></li>
+                {%else%}
+                <li><a href="{{url_for('auth.login')}}">Login</a></li>
+                {%endif%}
+            </ul>
+            </div>
+    </div>
+    </div>
+
+{%endblock%}
+
+    {%block content%}
+    <div class='container'>
+        {%block head_content%}
+        {%endblock%}
+    </div>
+    {%endblock%}
+    {%block footer%}
+    {%endblock%}
+
+</body>
+</html>

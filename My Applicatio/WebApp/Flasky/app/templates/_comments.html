@@ -1,0 +1,27 @@
+<div class='containers'>
+{{wtf.quick_form(form)}}
+</div>
+
+<ul class='card-body'>
+    {%for comment in comments%}
+    <li class='post'>
+        <div class='card-img-top'>
+            <a href="{{url_for('.user',username=comment.author.username)}}">
+                <img class='img-rounded' src='{{comment.author.gravatar(size=40)}}' align='left'>
+                </a>
+        </div>
+        <div class='post_date' align='right'>This was said {{moment(comment.timestamp).fromNow()}}</div>
+        <div class='post-author'>
+            <a href="{{url_for('.user',username=comment.author.username)}}" class='card-title'>{{post.author.username}}</a>
+        </div>
+        <div class='card-text'>{{comment.body}}</div>
+        <a href="{{url_for('.post',id=post.id)}}#comments">
+            <span class='label label-primary' align='right'>{{post.comments.count()}} Comments</span></a>
+        <div class='post-footer' align='right'>
+            <a href="{{url_for('.post',id=post.id)}}">
+                <span class="label label-default">Permanent link</span>
+             </a>
+        </div>
+    </li>
+    {%endfor%}
+</ul>

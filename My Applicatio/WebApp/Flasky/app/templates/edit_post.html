@@ -1,0 +1,18 @@
+{%extends 'base.html'%}
+{%import 'bootstrap/wtf.html' as wtf%}
+{%block title%}Edit -Post{%endblock%}
+{%block content%}
+{%block head_content%}
+<div class='page-header'>
+<h3>EDIT USER POST</h3>
+</div>
+{%endblock%}
+<div class='containers'>
+    {{wtf.quick_form(form)}}
+    </div>
+{%endblock%}
+{%block scripts%}
+{{super()}}
+{{pagedown.include_pagedown()}}
+{%endblock%}
+

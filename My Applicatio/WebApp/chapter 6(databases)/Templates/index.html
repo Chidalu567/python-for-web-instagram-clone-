@@ -1,0 +1,26 @@
+{%extends 'base.html'%}
+{%import 'bootstrap/wtf.html' as wtf%}
+
+{%block title%}Advance user{%endblock%}
+
+{%block content%}
+{%block head_content%}
+<div class='page-header'>
+    <h1>Hello,{%if name%}{{name|title}}{%else%}Stranger!{%endif%}</h1>
+</div>
+{%endblock%}
+<div class='containers'>
+{%if not known%}
+    <div class='alert alert-info'>
+        <button type='button' class='close' data-dismiss='alert'>&times</button>
+        <p>Nice to meet you New Comer</p>
+    </div>
+{%else%}
+    <div class='alert alert-info'>
+        <button type='button' class='close' data-dismiss='alert'>&times</button>
+        <p>Welcome back again old comer</p>
+    </div>
+</div>
+{%endif%}
+{{wtf.quick_form(form)}}
+{%endblock%}
