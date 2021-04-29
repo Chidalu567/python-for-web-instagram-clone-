@@ -1,3 +1,5 @@
+//codec chidalu
+
 from . import login_manager
 from . import db
 from werkzeug.security import generate_password_hash,check_password_hash
